@@ -23,14 +23,21 @@ http.route({
 
       switch (result.type) {
         case "user.created":
-        case "user.updated":
+        case "user.updated": {
+          const email = result.data.email_addresses?.[0]?.email_address;
+          if (!email) {
+            console.warn(`User ${result.data.id} has no email address, skipping upsert.`);
+            break;
+          }
+
           await ctx.runMutation(internal.users.upsertFromClerk, {
             clerkId: result.data.id,
-            email: result.data.email_addresses[0].email_address,
+            email: email,
             name: `${result.data.first_name ?? ""} ${result.data.last_name ?? ""}`.trim(),
             imageUrl: result.data.image_url,
           });
           break;
+        }
         case "user.deleted":
           await ctx.runMutation(internal.users.deleteFromClerk, {
             clerkId: result.data.id!,
