@@ -4,11 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-Building Step 1 (Project Scaffolding) — Next.js 15, Tailwind v4, and shadcn/ui are set up. Moving on to database and auth.
+Building Step 1 (Project Scaffolding) — Next.js 16, Tailwind v4, and shadcn/ui are set up. Moving on to database and auth.
 
 ## Current Goal
 
-Step 1: Project scaffolding — initialize Next.js 15 with TypeScript,
+Step 1: Project scaffolding — initialize Next.js 16 with TypeScript,
 Tailwind, shadcn/ui, Convex, and Clerk. Get `npm run build` passing
 on an empty shell before writing any feature code.
 
@@ -16,13 +16,15 @@ on an empty shell before writing any feature code.
 
 - Context files authored and finalized (all 6 docs)
 - 01-design-system: Install and configure shadcn/ui and basic components
-- Scaffolded Next.js 15 app with TypeScript
+- Scaffolded Next.js 16 app with TypeScript
 - Configured Tailwind CSS v4 and removed Next.js default boilerplate
 - Installed base shadcn/ui components (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
+- Verified production build (`npm run build`) passes on base scaffold
 
 ## In Progress
 
 - Integrating Convex for real-time backend
+- Integrating Clerk for authentication
 
 ## Next Up
 
