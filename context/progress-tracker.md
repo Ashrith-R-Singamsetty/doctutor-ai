@@ -84,10 +84,10 @@ Implement streaming lesson generation and the interactive AI tutor.
   first open and are cached in Convex. This keeps import fast (<30s)
   and avoids generating lessons the user never reads.
 
-- **Single LLM for all tasks (Claude Sonnet 4.5)**: Using one model
+- **Single LLM for all tasks (Gemini 3.5 Flash)**: Using one model
   for roadmap, lesson, and tutor rather than mixing models. Simplifies
   cost tracking and debugging. If tutor chat needs to be cheaper at
-  scale, swap to Haiku for chat only — not now.
+  scale, swap to a model like Haiku for chat only — not now.
 
 - **Firecrawl over custom crawler**: Docs sites have wildly varying
   HTML structure. Building a robust crawler is a product in itself.

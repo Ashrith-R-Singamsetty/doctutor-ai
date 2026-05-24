@@ -45,6 +45,21 @@ export const createLessons = mutation({
 export const getLessonsByTopic = query({
   args: { topicId: v.id("topics") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) return [];
+
+    const topic = await ctx.db.get(args.topicId);
+    if (!topic) return [];
+
+    const course = await ctx.db.get(topic.courseId);
+    if (!course || course.userId !== user._id) return [];
+
     return await ctx.db
       .query("lessons")
       .withIndex("by_topicId", (q) => q.eq("topicId", args.topicId))
@@ -55,6 +70,18 @@ export const getLessonsByTopic = query({
 export const getLessonsByCourse = query({
   args: { courseId: v.id("courses") },
   handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) return [];
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) return [];
+
+    const course = await ctx.db.get(args.courseId);
+    if (!course || course.userId !== user._id) return [];
+
     return await ctx.db
       .query("lessons")
       .withIndex("by_courseId", (q) => q.eq("courseId", args.courseId))

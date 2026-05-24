@@ -11,7 +11,8 @@ We're implementing the core AI roadmap generation pipeline. This stage takes the
   - `getTopics`: Query to list topics for a course.
 - Create `convex/lessons.ts`:
   - `createLessons`: Mutation to batch insert lessons linked to topics.
-  - `getLessonsByTopic`: Query to list lessons for a specific topic.
+  - `getLessonsByTopic`: Query to list lessons for a specific topic (requires auth and ownership check).
+  - `getLessonsByCourse`: Query to list all lessons for a given course (requires auth and ownership check).
 
 **Security**: Every mutation must verify `userId` against the authenticated user.
 
@@ -30,11 +31,15 @@ We're implementing the core AI roadmap generation pipeline. This stage takes the
   - Input: `courseId` and the `crawledData`.
   - Auth: Verify Clerk session.
   - Implementation:
-    - Update course status to `generating`.
-    - Call `generateRoadmap`.
-    - Batch insert topics and lessons into Convex.
-    - Update course status to `ready`.
-  - Response: Consistent `{ data: { courseId } }` shape.
+    - Set course status to `generating`.
+    - Call `generateRoadmap` inside a try/catch block.
+    - On success:
+      - Batch insert topics and lessons into Convex.
+      - Update course status to `ready`.
+    - On failure:
+      - Update `courses.error` with the specific error message.
+      - Set course status to `error`.
+  - Response: Consistent `{ data: { courseId } }` shape in both success and failure paths.
 
 ### Roadmap UI
 - Create `app/courses/[courseId]/page.tsx`:

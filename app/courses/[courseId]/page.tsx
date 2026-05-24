@@ -32,11 +32,21 @@ export default async function CoursePage({ params }: CoursePageProps) {
     courseId: typedCourseId,
   });
 
-  // Organize lessons by topic
-  const lessonsByTopic = topics.reduce((acc, topic) => {
-    acc[topic._id] = lessons.filter((l) => l.topicId === topic._id).sort((a,b) => a.order - b.order);
-    return acc;
-  }, {} as Record<string, typeof lessons>);
+  // Organize lessons by topic in a single pass
+  const lessonsByTopic: Record<string, typeof lessons> = {};
+  for (const lesson of lessons) {
+    if (!lessonsByTopic[lesson.topicId]) {
+      lessonsByTopic[lesson.topicId] = [];
+    }
+    lessonsByTopic[lesson.topicId].push(lesson);
+  }
+
+  // Sort lessons within each topic immutably
+  for (const topicId in lessonsByTopic) {
+    lessonsByTopic[topicId] = [...lessonsByTopic[topicId]].sort((a, b) => a.order - b.order);
+  }
+
+  const sortedTopics = [...topics].sort((a, b) => a.order - b.order);
 
   return (
     <div className="flex flex-col h-screen bg-black text-zinc-100">
@@ -81,7 +91,7 @@ export default async function CoursePage({ params }: CoursePageProps) {
              </div>
           ) : (
             <div className="grid gap-6">
-              {topics.sort((a,b) => a.order - b.order).map((topic) => (
+              {sortedTopics.map((topic) => (
                 <TopicCard
                   key={topic._id}
                   title={topic.title}

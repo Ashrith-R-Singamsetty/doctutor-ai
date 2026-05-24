@@ -34,7 +34,7 @@ export function TopicCard({ title, description, order, lessons, courseId }: Topi
       </CardHeader>
       <CardContent>
         <div className="space-y-3">
-          {lessons.sort((a, b) => a.title.localeCompare(b.title)).map((lesson) => (
+          {[...lessons].sort((a,b) => a.title.localeCompare(b.title)).map((lesson) => (
             <Link 
               key={lesson._id}
               href={`/courses/${courseId}/lessons/${lesson._id}`}

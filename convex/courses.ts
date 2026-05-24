@@ -52,7 +52,7 @@ export const updateCourseStatus = mutation({
 
     await ctx.db.patch(args.courseId, {
       status: args.status,
-      error: args.error,
+      error: args.status === "error" ? args.error ?? null : null,
     });
   },
 });

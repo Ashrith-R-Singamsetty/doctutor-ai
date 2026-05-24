@@ -1,6 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { api } from "@/convex/_generated/api";
-import { fetchMutation } from "convex/nextjs";
+import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { generateRoadmap } from "@/lib/ai/generateRoadmap";
 import { RoadmapSchema } from "@/lib/validators";
 import { z } from "zod";
@@ -17,8 +17,9 @@ const RoadmapRequestSchema = z.object({
 });
 
 export async function POST(req: Request) {
+  let body: unknown;
   try {
-    const body = await req.json();
+    body = await req.json();
     const validated = RoadmapRequestSchema.safeParse(body);
 
     if (!validated.success) {
@@ -33,6 +34,12 @@ export async function POST(req: Request) {
     const { courseId, crawledData } = validated.data;
     const typedCourseId = courseId as Id<"courses">;
 
+    // Fetch the course to get the real title
+    const course = await fetchQuery(api.courses.getCourse, { courseId: typedCourseId });
+    if (!course) {
+      return Response.json({ error: "Course not found" }, { status: 404 });
+    }
+
     // 1. Update status to generating
     await fetchMutation(api.courses.updateCourseStatus, {
       courseId: typedCourseId,
@@ -43,7 +50,7 @@ export async function POST(req: Request) {
     const fullMarkdown = crawledData.map((d) => `URL: ${d.url}\n\n${d.markdown}`).join("\n\n---\n\n");
     
     // 3. Generate Roadmap
-    const roadmap = await generateRoadmap("Course", fullMarkdown);
+    const roadmap = await generateRoadmap(course.title, fullMarkdown);
 
     // 4. Persistence to Convex
     const topicIds = await fetchMutation(api.topics.createTopics, {
@@ -81,18 +88,17 @@ export async function POST(req: Request) {
   } catch (err: unknown) {
     console.error("Roadmap generation failed:", err);
     
-    // Attempt to mark as error in Convex if we have a courseId
-    try {
-        const body = await req.clone().json();
-        if (body.courseId) {
-            await fetchMutation(api.courses.updateCourseStatus, {
-                courseId: body.courseId as Id<"courses">,
-                status: "error",
-                error: "Failed to generate roadmap. Please try again.",
-            });
-        }
-    } catch (e) {
-        // Ignore secondary error
+    // Use the stored body to update status
+    if (body && typeof body === "object" && "courseId" in body) {
+      try {
+        await fetchMutation(api.courses.updateCourseStatus, {
+          courseId: (body as { courseId: string }).courseId as Id<"courses">,
+          status: "error",
+          error: "Failed to generate roadmap. Please try again.",
+        });
+      } catch (e) {
+        console.error("Failed to update course error status:", e);
+      }
     }
 
     return Response.json(

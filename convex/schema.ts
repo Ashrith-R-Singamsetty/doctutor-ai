@@ -20,7 +20,7 @@ export default defineSchema({
       v.literal("ready"),
       v.literal("error")
     ),
-    error: v.optional(v.string()),
+    error: v.optional(v.union(v.string(), v.null())),
   }).index("by_userId", ["userId"]),
 
   topics: defineTable({
