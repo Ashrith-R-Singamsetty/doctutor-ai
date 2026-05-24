@@ -8,9 +8,9 @@ const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET!;
 export const fulfill = internalAction({
   args: {
     headers: v.object({
-      "svix-id": v.string(),
-      "svix-timestamp": v.string(),
-      "svix-signature": v.string(),
+      svix_id: v.string(),
+      svix_timestamp: v.string(),
+      svix_signature: v.string(),
     }),
     payload: v.string(),
   },
@@ -23,7 +23,11 @@ export const fulfill = internalAction({
     let evt: WebhookEvent;
 
     try {
-      evt = wh.verify(args.payload, args.headers) as WebhookEvent;
+      evt = wh.verify(args.payload, {
+        "svix-id": args.headers.svix_id,
+        "svix-timestamp": args.headers.svix_timestamp,
+        "svix-signature": args.headers.svix_signature,
+      }) as WebhookEvent;
     } catch (err) {
       console.error("Error verifying webhook:", err);
       throw new Error("Error verifying webhook");
