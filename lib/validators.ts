@@ -24,3 +24,14 @@ export const RoadmapSchema = z.object({
 });
 
 export type Roadmap = z.infer<typeof RoadmapSchema>;
+
+export const CrawlRequestSchema = z.object({
+  url: z.string().url(),
+});
+
+export const CrawlResponseSchema = z.array(
+  z.object({
+    url: z.string().url(),
+    markdown: z.string(),
+  })
+);
