@@ -12,6 +12,13 @@ export const RoadmapSchema = z.object({
       title: z.string(),
       description: z.string(),
       order: z.number(),
+      lessons: z.array(
+        z.object({
+          title: z.string(),
+          description: z.string(),
+          order: z.number(),
+        })
+      ),
     })
   ),
 });

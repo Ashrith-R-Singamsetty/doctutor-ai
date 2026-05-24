@@ -23,16 +23,15 @@ Define full schema and build the documentation ingestion pipeline (Firecrawl).
 - Added environment variable validation for `CLERK_JWT_ISSUER_DOMAIN` in `convex/auth.config.ts`.
 - Added safety guard to Clerk webhook handler in `convex/http.ts` to prevent crashes when user has no email.
 - Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
+- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices and ownership rules.
 
 ## In Progress
 
-- Defining full Convex schema (courses, topics, lessons, etc.)
 - Integrating Firecrawl for documentation crawling
+- Building `POST /api/crawl` — Firecrawl integration, URL validation, markdown return
 
 ## Next Up
 
-1. Define full Convex schema (users, courses, topics, lessons, progress,
-   chatMessages)
 2. Build `POST /api/crawl` — Firecrawl integration, URL validation,
    markdown return
 3. Build `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema,
