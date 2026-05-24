@@ -19,17 +19,19 @@ Define full schema and build the documentation ingestion pipeline (Firecrawl).
 - Installed base shadcn/ui components (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
 - Verified production build (`npm run build`) passes on base scaffold
 - 02-convex-clerk-setup: Integrated Convex and Clerk (Auth, Webhooks, Middleware)
+- Fixed root layout structure to comply with Next.js App Router rules (moved `ClerkProvider` inside `<body>`).
+- Added environment variable validation for `CLERK_JWT_ISSUER_DOMAIN` in `convex/auth.config.ts`.
+- Added safety guard to Clerk webhook handler in `convex/http.ts` to prevent crashes when user has no email.
 - Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
+- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices and ownership rules.
 
 ## In Progress
 
-- Defining full Convex schema (courses, topics, lessons, etc.)
 - Integrating Firecrawl for documentation crawling
+- Building `POST /api/crawl` — Firecrawl integration, URL validation, markdown return
 
 ## Next Up
 
-1. Define full Convex schema (users, courses, topics, lessons, progress,
-   chatMessages)
 2. Build `POST /api/crawl` — Firecrawl integration, URL validation,
    markdown return
 3. Build `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema,

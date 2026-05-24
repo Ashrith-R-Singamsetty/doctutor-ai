@@ -7,7 +7,11 @@ const WEBHOOK_SECRET = process.env.CLERK_WEBHOOK_SECRET!;
 
 export const fulfill = internalAction({
   args: {
-    headers: v.any(),
+    headers: v.object({
+      "svix-id": v.string(),
+      "svix-timestamp": v.string(),
+      "svix-signature": v.string(),
+    }),
     payload: v.string(),
   },
   handler: async (ctx, args) => {
