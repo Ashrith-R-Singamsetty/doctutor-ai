@@ -4,13 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-Building Step 1 (Project Scaffolding) — Next.js 16, Tailwind v4, and shadcn/ui are set up. Moving on to database and auth.
+Step 1 Complete: Project scaffolding, Convex, and Clerk integrated. Moving to Schema definition and Firecrawl integration.
 
 ## Current Goal
 
-Step 1: Project scaffolding — initialize Next.js 16 with TypeScript,
-Tailwind, shadcn/ui, Convex, and Clerk. Get `npm run build` passing
-on an empty shell before writing any feature code.
+Define full schema and build the documentation ingestion pipeline (Firecrawl).
 
 ## Completed
 
@@ -20,21 +18,23 @@ on an empty shell before writing any feature code.
 - Configured Tailwind CSS v4 and removed Next.js default boilerplate
 - Installed base shadcn/ui components (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
 - Verified production build (`npm run build`) passes on base scaffold
+- 02-convex-clerk-setup: Integrated Convex and Clerk (Auth, Webhooks, Middleware)
+- Fixed root layout structure to comply with Next.js App Router rules (moved `ClerkProvider` inside `<body>`).
+- Added environment variable validation for `CLERK_JWT_ISSUER_DOMAIN` in `convex/auth.config.ts`.
+- Added safety guard to Clerk webhook handler in `convex/http.ts` to prevent crashes when user has no email.
+- Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
+- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices and ownership rules.
 
 ## In Progress
 
-- Integrating Convex for real-time backend
-- Integrating Clerk for authentication
+- Integrating Firecrawl for documentation crawling
+- Building `POST /api/crawl` — Firecrawl integration, URL validation, markdown return
 
 ## Next Up
 
-1. Install and configure Convex — run `npx convex dev`, set up schema
-2. Install and configure Clerk — `middleware.ts`, sign-in/sign-up pages
-4. Define full Convex schema (users, courses, topics, lessons, progress,
-   chatMessages)
-5. Build `POST /api/crawl` — Firecrawl integration, URL validation,
+2. Build `POST /api/crawl` — Firecrawl integration, URL validation,
    markdown return
-6. Build `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema,
+3. Build `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema,
    Convex write
 7. Build roadmap page UI — topic list, lesson cards, progress state
 8. Build `POST /api/lesson` — streaming lesson generation with docs
