@@ -1,6 +1,7 @@
 import FirecrawlApp from "@mendable/firecrawl-js";
 import { CrawlResponseSchema } from "./validators";
 import { z } from "zod";
+import { CrawledDoc } from "./types";
 
 const getApp = () => {
   if (!process.env.FIRECRAWL_API_KEY) {
@@ -10,8 +11,6 @@ const getApp = () => {
     apiKey: process.env.FIRECRAWL_API_KEY,
   });
 };
-
-export type CrawledDoc = z.infer<typeof CrawlResponseSchema>[number];
 
 /**
  * Crawls a documentation site and returns the markdown content of up to 50 pages.

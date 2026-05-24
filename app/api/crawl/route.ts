@@ -38,10 +38,9 @@ export async function POST(req: Request) {
       );
     }
 
-    // 4. Return results
+    // 4. Return results (Strictly follows { data: T } standard)
     return NextResponse.json({
       data: docs,
-      courseCount: docs.length,
     });
 
   } catch (error: unknown) {

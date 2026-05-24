@@ -4,11 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-Step 1 Complete: Project scaffolding, Convex, and Clerk integrated. Moving to Schema definition and Firecrawl integration.
+Phase 2 (Data Layer) & Phase 3 (AI Pipeline) — Implementing Convex backend functions and the Roadmap generation logic.
 
 ## Current Goal
 
-Define full schema and build the documentation ingestion pipeline (Firecrawl).
+Implement full Convex CRUD for courses/topics/lessons and build the AI roadmap generation pipeline.
 
 ## Completed
 
@@ -19,34 +19,24 @@ Define full schema and build the documentation ingestion pipeline (Firecrawl).
 - Installed base shadcn/ui components (Button, Card, Dialog, Input, Tabs, Textarea, ScrollArea)
 - Verified production build (`npm run build`) passes on base scaffold
 - 02-convex-clerk-setup: Integrated Convex and Clerk (Auth, Webhooks, Middleware)
-- 03-firecrawl-implementation: Finalized technical spec for documentation ingestion pipeline
-- Fixed root layout structure to comply with Next.js App Router rules (moved `ClerkProvider` inside `<body>`).
-- Added environment variable validation for `CLERK_JWT_ISSUER_DOMAIN` in `convex/auth.config.ts`.
-- Added safety guard to Clerk webhook handler in `convex/http.ts` to prevent crashes when user has no email.
+- 03-firecrawl-implementation: Implemented `lib/firecrawl.ts` and `POST /api/crawl`.
+- Fixed root layout structure to comply with Next.js App Router rules.
 - Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
-- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices and ownership rules.
-- Standardized Clerk webhook logging in `convex/http.ts` to remove persistent user identifiers.
-- Implemented `lib/firecrawl.ts` for documentation crawling and markdown extraction.
-- Developed `POST /api/crawl` endpoint with Clerk authentication and Zod validation.
+- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices.
+- Standardized Clerk webhook logging in `convex/http.ts`.
+- Verified Firecrawl implementation against `code-standards.md` (Success: `{ data: T }` response shape, no `any`, shared types).
 
 ## In Progress
 
-- Building `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema, Convex write
-- Building roadmap page UI — topic list, lesson cards, progress state
+- Implementing Convex mutations/queries for courses, topics, and lessons.
+- Building `POST /api/roadmap` — Structured AI generation with Anthropic.
 
 ## Next Up
 
-3. Build `POST /api/roadmap` — `generateObject` with Zod RoadmapSchema,
-   Convex write
-7. Build roadmap page UI — topic list, lesson cards, progress state
-8. Build `POST /api/lesson` — streaming lesson generation with docs
-   context
-9. Build lesson page UI — streaming content render, exercise, quiz
-10. Build `POST /api/chat` — `useChat` tutor with lesson + docs context
-11. Wire progress tracking — quiz submit, lesson complete mutations
-12. Build dashboard — course grid, resume links, delete
-13. Add usage caps — course count check in import route
-14. Final pass — error states, loading skeletons, empty states
+- Build `lib/ai/generateRoadmap.ts` — `generateObject` with Zod RoadmapSchema.
+- Build roadmap page UI — topic list, lesson cards, progress state.
+- Build `POST /api/lesson` — streaming lesson generation with docs context.
+- Build lesson page UI — streaming content render, exercise, quiz.
 
 ## Open Questions
 

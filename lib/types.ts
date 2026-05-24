@@ -62,3 +62,8 @@ export interface ApiResponse<T> {
   error?: string;
   code?: string;
 }
+
+export interface CrawledDoc {
+  url: string;
+  markdown: string;
+}
