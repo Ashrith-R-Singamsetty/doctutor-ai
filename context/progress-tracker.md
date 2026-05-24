@@ -24,6 +24,7 @@ Define full schema and build the documentation ingestion pipeline (Firecrawl).
 - Added safety guard to Clerk webhook handler in `convex/http.ts` to prevent crashes when user has no email.
 - Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
 - Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices and ownership rules.
+- Standardized Clerk webhook logging in `convex/http.ts` to remove persistent user identifiers.
 
 ## In Progress
 
