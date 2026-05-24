@@ -8,7 +8,7 @@ Phase 2 (Data Layer) & Phase 3 (AI Pipeline) — Implementing Convex backend fun
 
 ## Current Goal
 
-Implement full Convex CRUD for courses/topics/lessons and build the AI roadmap generation pipeline.
+Implement streaming lesson generation and the interactive AI tutor.
 
 ## Completed
 
@@ -21,22 +21,20 @@ Implement full Convex CRUD for courses/topics/lessons and build the AI roadmap g
 - 02-convex-clerk-setup: Integrated Convex and Clerk (Auth, Webhooks, Middleware)
 - 03-firecrawl-implementation: Implemented `lib/firecrawl.ts` and `POST /api/crawl`.
 - Fixed root layout structure to comply with Next.js App Router rules.
-- Code Standards Audit: Refined Convex mutations with ownership checks, removed `any`, and established `lib/types.ts` and `lib/validators.ts`.
-- Defined full Convex schema (courses, topics, lessons, progress, chatMessages) with proper indices.
-- Standardized Clerk webhook logging in `convex/http.ts`.
-- Verified Firecrawl implementation against `code-standards.md` (Success: `{ data: T }` response shape, no `any`, shared types).
+- 04-roadmap-generation: Implemented AI roadmap pipeline using Gemini 3.5 Flash, Convex schema, and core UI.
+- Standardized Convex action/mutation validation (fixed hyphenated keys issue).
+- Verified type safety across the roadmap generation unit (zero `any` types).
 
 ## In Progress
 
-- Implementing Convex mutations/queries for courses, topics, and lessons.
-- Building `POST /api/roadmap` — Structured AI generation with Anthropic.
+- 05-lesson-generation: Building `POST /api/lesson` — streaming lesson generation with docs context using Gemini 3.5 Flash.
+- Building lesson page UI (`app/courses/[courseId]/lessons/[lessonId]/page.tsx`).
 
 ## Next Up
 
-- Build `lib/ai/generateRoadmap.ts` — `generateObject` with Zod RoadmapSchema.
-- Build roadmap page UI — topic list, lesson cards, progress state.
-- Build `POST /api/lesson` — streaming lesson generation with docs context.
-- Build lesson page UI — streaming content render, exercise, quiz.
+- Build AI tutor (`lib/ai/tutorChat.ts`) — `useChat` integration.
+- Implement progress tracking mutations and quiz validation.
+- Dashboard course list and course deletion.
 
 ## Open Questions
 

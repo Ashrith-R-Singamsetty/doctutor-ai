@@ -9,7 +9,10 @@
  */
 
 import type * as clerk from "../clerk.js";
+import type * as courses from "../courses.js";
 import type * as http from "../http.js";
+import type * as lessons from "../lessons.js";
+import type * as topics from "../topics.js";
 import type * as users from "../users.js";
 
 import type {
@@ -20,7 +23,10 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   clerk: typeof clerk;
+  courses: typeof courses;
   http: typeof http;
+  lessons: typeof lessons;
+  topics: typeof topics;
   users: typeof users;
 }>;
 
