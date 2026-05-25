@@ -102,11 +102,11 @@ export const getLesson = query({
     if (!user) throw new Error("User not found");
 
     const lesson = await ctx.db.get(args.lessonId);
-    if (!lesson) throw new Error("Lesson not found");
+    if (!lesson) return null;
 
     const course = await ctx.db.get(lesson.courseId);
     if (!course || course.userId !== user._id) {
-      throw new Error("Access denied");
+      return null;
     }
 
     return {

@@ -37,7 +37,7 @@ export default function LessonPage() {
   const scrollRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
     if (scrollRef.current) {
-        scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        scrollRef.current.scrollIntoView({ behavior: "auto" });
     }
   }, [messages]);
 
@@ -73,6 +73,10 @@ export default function LessonPage() {
 
   if (lesson === undefined) {
     return <LessonLoadingSkeleton />;
+  }
+
+  if (lesson === null) {
+    return <LessonUnavailable />;
   }
 
   return (
@@ -336,6 +340,21 @@ function LessonLoadingSkeleton() {
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-3/4" />
         </div>
+    </div>
+  );
+}
+
+function LessonUnavailable() {
+  return (
+    <div className="flex min-h-screen items-center justify-center bg-background p-8">
+      <Card className="max-w-md border-zinc-800">
+        <CardHeader>
+          <CardTitle>Lesson unavailable</CardTitle>
+          <CardDescription>
+            This lesson could not be found, or you do not have access to it.
+          </CardDescription>
+        </CardHeader>
+      </Card>
     </div>
   );
 }

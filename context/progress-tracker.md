@@ -4,11 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-Phase 5 (Lesson Generation) — Implementing on-demand streaming lesson content.
+Phase 6 (AI Tutor) - In progress: validating scoped tutor behavior in the lesson page.
 
 ## Current Goal
 
-Implement `POST /api/lesson` for streaming generation and build the interactive lesson page.
+Validate `POST /api/chat` and the lesson-page tutor experience against generated lesson context.
 
 ## Completed
 
@@ -29,6 +29,7 @@ Implement `POST /api/lesson` for streaming generation and build the interactive 
 - 05-lesson-generation: Implemented streaming lesson generation with docs context and caching. [Done]
 - Resolved all syntax, build, and lint issues for production readiness. [Done]
 - Fixed AI SDK v6 chat integration on the lesson page and tutor API route. [Done]
+- Verified and fixed still-valid inline review findings for tutor chat, lesson generation persistence, lesson null states, import failures, and Convex lesson access. [Done]
 
 ## In Progress
 

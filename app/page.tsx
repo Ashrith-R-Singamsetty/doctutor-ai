@@ -4,11 +4,43 @@ import { useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useRouter } from "next/navigation";
+import type { Id } from "@/convex/_generated/dataModel";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardDescription, CardHeader } from "@/components/ui/card";
 import { BookOpen, Sparkles, Wand2, Loader2 } from "lucide-react";
 import { SignInButton, UserButton, useUser } from "@clerk/nextjs";
+
+function normalizeDocumentationUrl(rawUrl: string) {
+  const trimmedUrl = rawUrl.trim();
+  if (!trimmedUrl) return null;
+
+  try {
+    const parsedUrl = new URL(trimmedUrl);
+    if (parsedUrl.protocol !== "http:" && parsedUrl.protocol !== "https:") {
+      return null;
+    }
+    parsedUrl.hash = "";
+    return parsedUrl.toString();
+  } catch {
+    return null;
+  }
+}
+
+function formatCourseFailure(error: unknown) {
+  if (error instanceof Error) {
+    return [
+      "Course generation failed after the course was created.",
+      `Message: ${error.message}`,
+      error.stack ? `Stack: ${error.stack}` : null,
+    ]
+      .filter(Boolean)
+      .join("\n")
+      .slice(0, 4000);
+  }
+
+  return "Course generation failed after the course was created.";
+}
 
 export default function Home() {
   const [url, setUrl] = useState("");
@@ -18,27 +50,34 @@ export default function Home() {
   const { isLoaded, isSignedIn } = useUser();
   
   const createCourse = useMutation(api.courses.createCourse);
+  const updateCourseStatus = useMutation(api.courses.updateCourseStatus);
 
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!url) return;
+    const normalizedUrl = normalizeDocumentationUrl(url);
+    if (!normalizedUrl) {
+      setIsLoading(false);
+      setStatus("Enter a valid http or https documentation URL.");
+      return;
+    }
 
+    let courseId: Id<"courses"> | null = null;
     try {
       setIsLoading(true);
       setStatus("Analyzing documentation...");
 
       // 1. Create the course record
-      const courseId = await createCourse({
+      courseId = await createCourse({
         title: "Generating...", // Temporary title
         description: "Preparing your learning roadmap...",
-        docsUrl: url,
+        docsUrl: normalizedUrl,
       });
 
       // 2. Crawl the documentation
       setStatus("Crawling docs (using Firecrawl)...");
       const crawlRes = await fetch("/api/crawl", {
         method: "POST",
-        body: JSON.stringify({ url }),
+        body: JSON.stringify({ url: normalizedUrl }),
       });
       
       const crawlData = await crawlRes.json();
@@ -61,10 +100,22 @@ export default function Home() {
       router.push(`/courses/${courseId}`);
     } catch (err: unknown) {
       console.error(err);
-      alert(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      const errorMessage = err instanceof Error ? err.message : "Something went wrong. Please try again.";
+      setStatus(errorMessage);
+      if (courseId) {
+        try {
+          await updateCourseStatus({
+            courseId,
+            status: "error",
+            error: formatCourseFailure(err),
+          });
+        } catch (updateErr) {
+          console.error("Failed to mark course as failed:", updateErr);
+        }
+      }
+      alert(errorMessage);
     } finally {
       setIsLoading(false);
-      setStatus(null);
     }
   };
 
@@ -119,7 +170,9 @@ export default function Home() {
             </CardHeader>
             <CardContent className="p-8 pt-4">
               <form onSubmit={handleGenerate} className="flex flex-col md:flex-row gap-3">
+                <label htmlFor="documentation-url" className="sr-only">Documentation URL</label>
                 <Input 
+                  id="documentation-url"
                   placeholder="https://nextjs.org/docs" 
                   className="bg-zinc-900/50 border-zinc-800 h-12 focus-visible:ring-blue-500 rounded-xl"
                   value={url}

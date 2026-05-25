@@ -44,25 +44,22 @@ export async function POST(req: Request) {
       lesson.rawDocsContent
     );
 
-    // Stream and save on finish
+    void result.object
+      .then(async (object: LessonContent) => {
+        await fetchMutation(api.lessons.saveLessonContent, {
+          lessonId: typedLessonId,
+          content: JSON.stringify(object),
+        });
+      })
+      .catch((err: unknown) => {
+        console.error("Failed to save generated lesson:", err);
+      });
+
     return result.toTextStreamResponse({
-        headers: {
-            "Content-Type": "text/plain; charset=utf-8",
-        },
-        onFinish: async (event: { object?: LessonContent }) => {
-            const object = event.object;
-            if (object) {
-                try {
-                    await fetchMutation(api.lessons.saveLessonContent, {
-                        lessonId: typedLessonId,
-                        content: JSON.stringify(object),
-                    });
-                } catch (err) {
-                    console.error("Failed to save generated lesson:", err);
-                }
-            }
-        }
-    } as unknown as ResponseInit); 
+      headers: {
+        "Content-Type": "text/plain; charset=utf-8",
+      },
+    });
 
   } catch (err: unknown) {
     console.error("Lesson generation failed:", err);
