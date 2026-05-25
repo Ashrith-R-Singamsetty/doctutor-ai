@@ -88,3 +88,60 @@ export const getLessonsByCourse = query({
       .collect();
   },
 });
+
+export const getLesson = query({
+  args: { lessonId: v.id("lessons") },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const lesson = await ctx.db.get(args.lessonId);
+    if (!lesson) throw new Error("Lesson not found");
+
+    const course = await ctx.db.get(lesson.courseId);
+    if (!course || course.userId !== user._id) {
+      throw new Error("Access denied");
+    }
+
+    return {
+      ...lesson,
+      rawDocsContent: course.rawDocsContent,
+    };
+  },
+});
+
+export const saveLessonContent = mutation({
+  args: {
+    lessonId: v.id("lessons"),
+    content: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const identity = await ctx.auth.getUserIdentity();
+    if (!identity) throw new Error("Unauthorized");
+
+    const user = await ctx.db
+      .query("users")
+      .withIndex("by_clerkId", (q) => q.eq("clerkId", identity.subject))
+      .unique();
+    if (!user) throw new Error("User not found");
+
+    const lesson = await ctx.db.get(args.lessonId);
+    if (!lesson) throw new Error("Lesson not found");
+
+    const course = await ctx.db.get(lesson.courseId);
+    if (!course || course.userId !== user._id) {
+      throw new Error("Access denied");
+    }
+
+    await ctx.db.patch(args.lessonId, {
+      content: args.content,
+      status: "generated",
+    });
+  },
+});

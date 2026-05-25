@@ -21,6 +21,7 @@ export default defineSchema({
       v.literal("error")
     ),
     error: v.optional(v.union(v.string(), v.null())),
+    rawDocsContent: v.optional(v.string()),
   }).index("by_userId", ["userId"]),
 
   topics: defineTable({

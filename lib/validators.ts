@@ -35,3 +35,20 @@ export const CrawlResponseSchema = z.array(
     markdown: z.string(),
   })
 );
+
+export const LessonSchema = z.object({
+  explanation: z.string(),
+  codeExample: z.string(),
+  commonMistake: z.string(),
+  exercise: z.string(),
+  quiz: z.array(
+    z.object({
+      question: z.string(),
+      options: z.array(z.string()),
+      correctAnswer: z.number(),
+      explanation: z.string(),
+    })
+  ).length(3),
+});
+
+export type LessonContent = z.infer<typeof LessonSchema>;
