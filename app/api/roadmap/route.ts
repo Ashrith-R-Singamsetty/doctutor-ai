@@ -2,7 +2,6 @@ import { auth } from "@clerk/nextjs/server";
 import { api } from "@/convex/_generated/api";
 import { fetchMutation, fetchQuery } from "convex/nextjs";
 import { generateRoadmap } from "@/lib/ai/generateRoadmap";
-import { RoadmapSchema } from "@/lib/validators";
 import { z } from "zod";
 import { Id } from "@/convex/_generated/dataModel";
 
@@ -49,6 +48,12 @@ export async function POST(req: Request) {
     // 2. Prepare content for AI
     const fullMarkdown = crawledData.map((d) => `URL: ${d.url}\n\n${d.markdown}`).join("\n\n---\n\n");
     
+    // Save raw content for future lesson generation
+    await fetchMutation(api.courses.updateCourseContent, {
+      courseId: typedCourseId,
+      content: fullMarkdown,
+    });
+
     // 3. Generate Roadmap
     const roadmap = await generateRoadmap(course.title, fullMarkdown);
 

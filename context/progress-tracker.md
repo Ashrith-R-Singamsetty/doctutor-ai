@@ -4,11 +4,11 @@ Update this file after every meaningful implementation change.
 
 ## Current Phase
 
-Phase 2 (Data Layer) & Phase 3 (AI Pipeline) — Implementing Convex backend functions and the Roadmap generation logic.
+Phase 5 (Lesson Generation) — Implementing on-demand streaming lesson content.
 
 ## Current Goal
 
-Implement streaming lesson generation and the interactive AI tutor.
+Implement `POST /api/lesson` for streaming generation and build the interactive lesson page.
 
 ## Completed
 
@@ -24,15 +24,18 @@ Implement streaming lesson generation and the interactive AI tutor.
 - 04-roadmap-generation: Implemented AI roadmap pipeline using Gemini 3.5 Flash, Convex schema, and core UI.
 - Standardized Convex action/mutation validation (fixed hyphenated keys issue).
 - Verified type safety across the roadmap generation unit (zero `any` types).
+- Synchronized `development` and `main` branches.
+- Authored feature spec for `05-lesson-generation`.
+- 05-lesson-generation: Implemented streaming lesson generation with docs context and caching. [Done]
+- Resolved all syntax, build, and lint issues for production readiness. [Done]
+- Fixed AI SDK v6 chat integration on the lesson page and tutor API route. [Done]
 
 ## In Progress
 
-- 05-lesson-generation: Building `POST /api/lesson` — streaming lesson generation with docs context using Gemini 3.5 Flash.
-- Building lesson page UI (`app/courses/[courseId]/lessons/[lessonId]/page.tsx`).
+- Phase 6 (AI Tutor): Continue validating scoped tutor behavior in the lesson page.
 
 ## Next Up
 
-- Build AI tutor (`lib/ai/tutorChat.ts`) — `useChat` integration.
 - Implement progress tracking mutations and quiz validation.
 - Dashboard course list and course deletion.
 

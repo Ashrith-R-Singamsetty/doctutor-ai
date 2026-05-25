@@ -1,6 +1,5 @@
 import FirecrawlApp from "@mendable/firecrawl-js";
 import { CrawlResponseSchema } from "./validators";
-import { z } from "zod";
 import { CrawledDoc } from "./types";
 
 const getApp = () => {
